@@ -1,0 +1,25 @@
+namespace: mysql-ns
+secrets:
+  - key: MYSQL_ROOT_PASSWORD
+    value: "root_password"
+replicas: 1
+image:
+  repository: mysql
+  tag: latest
+pvc:
+  requests:
+    storage: 1Gi
+affinity:
+  key: app
+  values:
+    - mysql
+toleration:
+  key: app
+  value: mysql
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
