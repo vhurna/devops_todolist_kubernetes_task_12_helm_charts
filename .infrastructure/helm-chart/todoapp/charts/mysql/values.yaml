@@ -30,3 +30,5 @@ hpa:
   maxReplicas: 5
   cpuUtilization: 50
   memoryUtilization: 50
+service:
+  port: 3306

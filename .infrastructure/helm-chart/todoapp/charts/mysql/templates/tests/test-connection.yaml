@@ -8,8 +8,7 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args: ['{{ include "mysql.fullname" . }}:{{ .Values.service.port }}']
+    - name: mysql-client
+      image: mysql:latest
+      command: ['mysql', '-h', '{{ include "mysql.fullname" . }}-service', '-P', '3306', '-u', 'root', '-e', 'SELECT 1;']
   restartPolicy: Never
