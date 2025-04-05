@@ -1,7 +1,6 @@
 namespace: mysql-ns
 secrets:
-  - key: MYSQL_ROOT_PASSWORD
-    value: "root_password"
+  MYSQL_ROOT_PASSWORD: "root_password"
 replicas: 1
 image:
   repository: mysql
@@ -23,3 +22,11 @@ resources:
   limits:
     cpu: 200m
     memory: 256Mi
+ingress:
+  enabled: false
+  host: mysql.local
+hpa:
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 50
+  memoryUtilization: 50

@@ -7,6 +7,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
+  serviceName: {{ .Chart.Name }}-service
   template:
     metadata:
       labels:
@@ -18,8 +19,11 @@ spec:
         env:
         {{- range $key, $value := .Values.secrets }}
         - name: {{ $key }}
-          value: {{ $value.value }}
+          value: {{ $value | quote }}
         {{- end }}
+        ports:
+        - containerPort: 3306
+          name: mysql
         resources:
           requests:
             cpu: {{ .Values.resources.requests.cpu }}
@@ -35,6 +39,11 @@ spec:
               - key: {{ .Values.affinity.key }}
                 operator: In
                 values: {{ .Values.affinity.values }}
-      tolerations:
-      - key: {{ .Values.toleration.key }}
-        value: {{ .Values.toleration.value }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.pvc.requests.storage }}

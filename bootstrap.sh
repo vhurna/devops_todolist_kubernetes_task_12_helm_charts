@@ -1,10 +1,21 @@
 #!/bin/bash
 
 # Створіть кластер
+#!/bin/bash
+
+# Створіть кластер
 kind create cluster --config cluster.yml
 
-# Забрудніть вузли
-kubectl taint node <node_name> app=mysql:NoSchedule
+# Динамічне отримання імені ноди з лейблом app=mysql та застосування taint
+NODE_NAME=$(kubectl get nodes -l app=mysql -o name)
+kubectl taint node "$NODE_NAME" app=mysql:NoSchedule --overwrite
+
+# Розгортання helm-чарту
+helm upgrade --install todoapp helm-chart/todoapp
+
+# Отримання всіх ресурсів і збереження у файл output.log
+kubectl get all,cm,secret,ing -A > output.log
+
 
 # Розгорніть ресурси для бази даних
 kubectl apply -f .infrastructure/mysql/ns.yml
